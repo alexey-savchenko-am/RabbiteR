@@ -1,0 +1,26 @@
+version: "3"
+services:
+ rabbitmq:
+    container_name: "rmq-container"
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+      - "8080:15672"
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+      interval: 5s
+      timeout: 15s
+      retries: 1
+ rabbitertests:
+    container_name: "test-container"
+    image: mcr.microsoft.com/dotnet/sdk:5.0
+    restart: on-failure
+    depends_on:
+        - rabbitmq
+    environment:
+      RabbitMqConnectionString: "amqp://guest:guest@rabbitmq:5672/"
+    volumes:
+    - ./bin/Release/net5.0:/app
+    working_dir: /app
+    entrypoint: [ "dotnet", "test", "Rabbiter.IntegrationTests.dll", "--verbosity", "normal", "--logger", "trx" ]

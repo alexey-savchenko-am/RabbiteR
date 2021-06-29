@@ -1,0 +1,20 @@
+﻿
+@model IEnumerable<WebClient.Data.Order>
+@{ 
+    int i = 0;
+}
+
+<div>
+    <h2>Processed Product List</h2>
+    <p>Total @Model.Count()</p>
+    <br/>
+    @foreach (var p in Model)
+    {
+        i++;
+        <p>
+            <span>@i</span>
+            <span>ID: @p.Id</span>
+            <span>Name: @p.Name</span>
+        </p>
+    }
+</div>
