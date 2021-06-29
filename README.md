@@ -1,3 +1,2 @@
-![logo](https://github.com/goOrn/RabbiteR/blob/master/docs/assets/icon.png) 
-# RabbiteR
-RabbitMQ client for .NET Core
+# <img src="docs/assets/icon.png" alt="" width="32" /> RabbiteR
+RabbitMQ client for ASP.NET Core
