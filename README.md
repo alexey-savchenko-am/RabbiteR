@@ -5,10 +5,10 @@ Makes it easy to publish messages to RMQ bus, consume messages from bus, handlin
 ## Table of contents
 - [Installing](#installing)
 - [Getting Started](#getting-started)
-    - [Creating Event](#event)
-    - [Register Transport](#transport)
-    - [Register Listener](#listener)
-- [Resolve Faults](#faults)
+    - [Event Definition](#event-definition)
+    - [Transport Registration](#transport-registration)
+    - [Set Event Listener](#set-event-listener)
+- [Resolve Faults](#resolve-faults)
 - [License](#license)
 
 ## Installing
@@ -21,12 +21,11 @@ $ dotnet add package RabbiteR
 PS> Install-Package RabbiteR
 ```
 ## Getting Started
+### Event Definition
 
-### Creating Event
+### Transport Registration
 
-### Register Transport
-
-### Register Listener
+### Set Event Listener
 
 ## Resolve Faults
 
