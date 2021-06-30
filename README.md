@@ -2,6 +2,7 @@
 ### Event based RabbitMQ client for ASP.NET Core.
 Makes it easy to publish messages to RMQ bus, consume messages from bus, handling and resolve possible faults during exchange process.
 
+[![NuGet version (Excel.CsvParser)](https://img.shields.io/nuget/v/RabbiteR?style=flat-square&color=blue)](https://www.nuget.org/packages/RabbiteR/0.3.0)
 ## Table of contents
 - [Installing](#installing)
 - [Getting Started](#getting-started)
