@@ -140,3 +140,8 @@ _eventPublisher.Publish(new OrderAcceptedEvent { Products = products }
 ## Integration Tests
 
 ## License
+
+Apache License 2.0
+```
+Copyright © 2021-present Alexey Savchenko <alexey.repository@gmail.com>
+```
