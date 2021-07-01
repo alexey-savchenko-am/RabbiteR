@@ -10,13 +10,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.7" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="RabbiteR" Version="0.6.0" />
 	<PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.0" />
 	<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.5.0" />
 	<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.5.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Rabbiter.Core\Rabbiter.Core.csproj" />
   </ItemGroup>
 
 </Project>

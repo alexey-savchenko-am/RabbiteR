@@ -6,7 +6,7 @@
 		<OutputType>Library</OutputType>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-		<Version>0.3.0</Version>
+		<Version>0.6.0</Version>
 		<Authors>Alexey Savchenko</Authors>
 		<Product>RabbiteR</Product>
 		<Description>Event based RabbitMQ client for ASP.NET Core. Makes it easy to publish messages to RMQ bus, consume messages from bus, handling and resolve possible faults during exchange process.</Description>
@@ -16,6 +16,9 @@
 		<PackageIcon>icon.png</PackageIcon>
 		<RepositoryUrl>https://github.com/goOrn/RabbiteR</RepositoryUrl>
 		<PackageTags>rabbitmq netcore rabbitmq-client</PackageTags>
+		<PackageId>RabbiteR</PackageId>
+		<AssemblyVersion>0.6.0.0</AssemblyVersion>
+		<FileVersion>0.6.0.0</FileVersion>
 	</PropertyGroup>
 
   <ItemGroup>
@@ -26,10 +29,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
     <PackageReference Include="Scrutor" Version="3.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Rabbiter.Core.Abstractions\Rabbiter.Core.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>
