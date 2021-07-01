@@ -139,6 +139,15 @@ _eventPublisher.Publish(new OrderAcceptedEvent { Products = products }
 
 ## Integration Tests
 
+Follow this steps to run integration tests:
+
+```powershell
+PS> cd rabbiter\tests\Rabbiter.IntegrationTests
+PS> dotnet build -c Release
+PS> ./init.sh
+```
+Test results will be written to ./bin/Release/net5/TestResults directory.
+
 ## License
 
 Apache License 2.0
