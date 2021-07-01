@@ -4,6 +4,21 @@
 		<TargetFramework>net5.0</TargetFramework>
 		<RootNamespace>Rabbiter.Core</RootNamespace>
 		<OutputType>Library</OutputType>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<Version>0.6.0</Version>
+		<Authors>Alexey Savchenko</Authors>
+		<Product>RabbiteR</Product>
+		<Description>Event based RabbitMQ client for ASP.NET Core. Makes it easy to publish messages to RMQ bus, consume messages from bus, handling and resolve possible faults during exchange process.</Description>
+		<PackageLicenseFile>LICENCE</PackageLicenseFile>
+		<PackageProjectUrl>https://github.com/goOrn/RabbiteR</PackageProjectUrl>
+		<Copyright>Alexey Savchenko</Copyright>
+		<PackageIcon>icon.png</PackageIcon>
+		<RepositoryUrl>https://github.com/goOrn/RabbiteR</RepositoryUrl>
+		<PackageTags>rabbitmq netcore rabbitmq-client</PackageTags>
+		<PackageId>RabbiteR</PackageId>
+		<AssemblyVersion>0.6.0.0</AssemblyVersion>
+		<FileVersion>0.6.0.0</FileVersion>
 	</PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +32,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Rabbiter.Core.Abstractions\Rabbiter.Core.Abstractions.csproj" />
+    <None Include="..\..\docs\assets\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\LICENCE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
