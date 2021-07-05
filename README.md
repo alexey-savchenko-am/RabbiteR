@@ -148,7 +148,7 @@ PS> cd rabbiter\tests\Rabbiter.IntegrationTests
 PS> dotnet build -c Release
 PS> ./init.sh
 ```
-Test results will be written to ./bin/Release/net5/TestResults directory.
+Test results will be written to rabbiter\tests\Rabbiter.IntegrationTests\TestResults directory.
 
 ## License
 
