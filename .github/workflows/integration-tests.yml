@@ -12,6 +12,6 @@ jobs:
     steps: 
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Execute tests
-        working-directory: ./tests
-        run: docker-compose up --exit-code-from rabbitertests rabbitertests
+      - name: Integration Tests
+        working-directory: ./tests/Rabbiter.IntegrationTests
+        run: ./init.sh
