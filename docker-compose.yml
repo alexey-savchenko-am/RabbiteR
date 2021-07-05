@@ -21,14 +21,12 @@ services:
     environment:
       RabbitMqConnectionString: "amqp://guest:guest@rabbitmq:5672/"
     volumes:
-    - ../../src:/src
-    - .:/test
+    - .:/src
+    - ../test:/test
     working_dir: /src
     command: 
         [
             "dotnet",
             "test",
-            "/test/Rabbiter.IntegrationTests.csproj",
-            "--logger", 
-            "trx"
+            "./Rabbiter.IntegrationTests.csproj"
         ]
