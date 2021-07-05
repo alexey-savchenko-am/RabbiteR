@@ -16,7 +16,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.7
+          dotnet-version: 5.0.204
           
       - name: Integration Tests
         working-directory: ./tests/Rabbiter.IntegrationTests
@@ -33,4 +33,4 @@ jobs:
         if: always()
         with:
             name: integration-test-results
-            path: tests/Rabbiter.IntegrationTests/TestResults
+            path: Rabbiter.IntegrationTests/TestResults
