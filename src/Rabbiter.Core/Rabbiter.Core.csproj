@@ -4,7 +4,7 @@
 		<TargetFramework>net5.0</TargetFramework>
 		<RootNamespace>Rabbiter.Core</RootNamespace>
 		<OutputType>Library</OutputType>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<Version>0.6.0</Version>
 		<Authors>Alexey Savchenko</Authors>
