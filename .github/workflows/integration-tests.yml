@@ -1,4 +1,4 @@
-name: Tests
+name: Integration Tests
 
 on:
   push:
@@ -33,4 +33,4 @@ jobs:
         if: always()
         with:
             name: integration-test-results
-            path: Rabbiter.IntegrationTests/TestResults
+            path: ./tests/Rabbiter.IntegrationTests/TestResults
