@@ -1,4 +1,4 @@
-# ![logo](docs/assets/logo-sm.png)
+[![logo](docs/assets/logo-sm.png)](https://github.com/goOrn/RabbiteR)
 ### Event based RabbitMQ client for ASP.NET Core.
 Makes it easy to publish messages to RMQ bus, consume messages from bus, handling and resolve possible faults during exchange process.
 
