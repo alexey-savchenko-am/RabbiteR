@@ -3,8 +3,9 @@
 Makes it easy to publish messages to RMQ bus, consume messages from bus, handling and resolve possible faults during exchange process.
 
 [![AppVeyor](https://img.shields.io/appveyor/build/goOrn/RabbiteR)](https://ci.appveyor.com/project/goOrn/rabbiter)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/goOrn/RabbiteR/Integration%20Tests?label=Integration%20Tests)](https://github.com/goOrn/RabbiteR/actions)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/goOrn/RabbiteR/Integration%20Tests?label=tests)](https://github.com/goOrn/RabbiteR/actions)
 [![NuGet version (RabbiteR)](https://img.shields.io/nuget/vpre/RabbiteR?color=orange&label=nuget%20package)](https://www.nuget.org/packages/RabbiteR/0.5.0)
+![Nuget](https://img.shields.io/nuget/dt/RabbiteR?color=orange)
 ## Table of contents
 - [Installing](#installing)
 - [Getting Started](#getting-started)
