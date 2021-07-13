@@ -38,6 +38,25 @@
             public List<IEventContainer<IEvent>> ReceivedEvents { get; set; }
         }
 
+        public Statistics EventStatistics(Type eventType) {
+
+           if(_statisticsDistionary.TryGetValue(eventType, out var val))
+           {
+               return val;
+           }
+
+            return default(Statistics);
+        }
+
+        public void Clear()
+        {
+            foreach (var s in _statisticsDistionary.Values)
+            {
+                s.ReceivedMessageCount = 0;
+                s.LastMessageReceivedDateTime = DateTime.MaxValue;
+                s.ReceivedEvents = new List<IEventContainer<IEvent>>();
+            }
+        }
 
         public Task HandleAsync(IEventContainer<TestEvent> @event)
         {
@@ -58,7 +77,8 @@
 
             var newStat = new Statistics(1, DateTime.Now);
             newStat.ReceivedEvents.Add(e);
-            return _statisticsDistionary.AddOrUpdate(typeof(TestEvent),
+
+            return _statisticsDistionary.AddOrUpdate(eventType,
                newStat,
                (t, s) =>
                {

@@ -45,4 +45,8 @@
     <Resource Include="testsettings.json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TestResults\" />
+  </ItemGroup>
+
 </Project>
