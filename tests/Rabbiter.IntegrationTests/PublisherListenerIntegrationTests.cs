@@ -5,6 +5,7 @@
     using Rabbiter.IntegrationTests.Events;
     using System;
     using System.Threading;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class PublisherListenerIntegrationTests
@@ -17,46 +18,87 @@
         }
 
         [Fact]
-        public void PublishOneMessageToBrokerAndSuccessfullyReceiveAndProcessOne()
+        public async Task PublishOneMessageToBrokerAndSuccessfullyReceiveAndProcessOne()
         {
+            var listener = _testFixture.TestEventListener;
+            listener.Clear();
+
+
             var eventId = _testFixture.Fixture.Create<int>();
 
             _testFixture.Publisher.Publish(new TestEvent { Id = eventId });
 
-            Assert.True(WaitUntilEventsProcessingCompleted(_testFixture.TestEventListener, 1));
+            await WaitForEventProcessingCompletionAsync(listener, 1);
+
+            Assert.Equal(1, listener.ProcessedEventCount);
         }
 
         [Fact]
-        public void PublishMultipleMessagesToBrokerAndSuccessfullyReceiveAndProcessThem()
+        public async Task PublishMultipleMessagesToBrokerAndSuccessfullyReceiveAndProcessThem()
         {
+
+            var listener = _testFixture.TestEventListener;
+
+            listener.Clear();
+
             _testFixture.Publisher.Publish(new TestEvent { Id = _testFixture.Fixture.Create<int>() });
             _testFixture.Publisher.Publish(new TestEvent { Id = _testFixture.Fixture.Create<int>() });
             _testFixture.Publisher.Publish(new TestEvent { Id = _testFixture.Fixture.Create<int>() });
+           
             _testFixture.Publisher.Publish(new TestEvent2 { Id = _testFixture.Fixture.Create<int>() });
             _testFixture.Publisher.Publish(new TestEvent2 { Id = _testFixture.Fixture.Create<int>() });
             _testFixture.Publisher.Publish(new TestEvent2 { Id = _testFixture.Fixture.Create<int>() });
 
-     
-            Assert.True(WaitUntilEventsProcessingCompleted(_testFixture.TestEventListener, 6, 20));
+            await WaitForEventProcessingCompletionAsync(listener, 6, 20);
+
+            var statEvent1 = listener.EventStatistics(typeof(TestEvent));
+            var statEvent2 = listener.EventStatistics(typeof(TestEvent2));
+
+            Assert.Equal(6, listener.ProcessedEventCount);
+            Assert.NotNull(statEvent1);
+            Assert.NotNull(statEvent2);
+            Assert.Equal(3, statEvent1.ReceivedMessageCount);
+            Assert.Equal(3, statEvent2.ReceivedMessageCount);
+
         }
 
 
-        private bool WaitUntilEventsProcessingCompleted(
+        private async Task WaitForEventProcessingCompletionAsync(
             TestEventListener listener, int expectedEventCount, int timeoutInSeconds = 10)
         {
-            var ct = new CancellationTokenSource(TimeSpan.FromSeconds(timeoutInSeconds)).Token;
-
-            while (!ct.IsCancellationRequested)
+            while (listener.ProcessedEventCount < expectedEventCount && timeoutInSeconds > 0)
             {
-                if (listener.ProcessedEventCount != expectedEventCount)
-                    continue;
-                else
-                    return true;
+                await Task.Delay(1000);
+                timeoutInSeconds--;
             }
-
-            return false;
-           
         }
 
-     }
+      /*  private async Task<bool> WaitUntilEventsProcessingCompletedAsync(
+            TestEventListener listener, int expectedEventCount, int timeoutInSeconds = 10)
+        {
+            CancellationTokenSource source = new CancellationTokenSource();
+            CancellationToken token = source.Token;
+
+            var task = Task.Run(async () =>
+            {
+                while (!token.IsCancellationRequested && listener.ProcessedEventCount < expectedEventCount)
+                {
+                    await Task.Delay(1000);
+                }
+            }, token);
+
+
+            if (await Task.WhenAny(task, Task.Delay(timeoutInSeconds)) == task)
+            {
+                return true;
+            }
+            else
+            {
+                source.Cancel();
+                return false;
+            }
+
+        }*/
+
+    }
 }
