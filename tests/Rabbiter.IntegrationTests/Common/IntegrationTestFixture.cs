@@ -9,6 +9,7 @@
     using Rabbiter.Core.Abstractions.Publishers;
     using Rabbiter.Core.Config;
     using Rabbiter.Core.Events.Listeners;
+    using Rabbiter.IntegrationTests.Events;
     using RabbitMQ.Client;
     using System;
     using System.Threading.Tasks;
@@ -58,6 +59,7 @@
                  {
 
                      services.AddSingleton<TestEventListener>();
+
                      services.RegisterRmqTransport(
                          () =>
                              RmqConfigurationBuilder
@@ -70,6 +72,7 @@
                         options =>
                             options
                                 .SubscribeOn<TestEvent, TestEventListener>()
+                                .SubscribeOn<TestEvent2, TestEventListener>()
                     );
 
 

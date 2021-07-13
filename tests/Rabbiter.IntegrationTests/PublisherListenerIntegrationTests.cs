@@ -2,6 +2,7 @@
 {
     using AutoFixture;
     using Rabbiter.IntegrationTests.Common;
+    using Rabbiter.IntegrationTests.Events;
     using System;
     using System.Threading;
     using Xunit;
@@ -31,11 +32,12 @@
             _testFixture.Publisher.Publish(new TestEvent { Id = _testFixture.Fixture.Create<int>() });
             _testFixture.Publisher.Publish(new TestEvent { Id = _testFixture.Fixture.Create<int>() });
             _testFixture.Publisher.Publish(new TestEvent { Id = _testFixture.Fixture.Create<int>() });
-            _testFixture.Publisher.Publish(new TestEvent { Id = _testFixture.Fixture.Create<int>() });
-            _testFixture.Publisher.Publish(new TestEvent { Id = _testFixture.Fixture.Create<int>() });
+            _testFixture.Publisher.Publish(new TestEvent2 { Id = _testFixture.Fixture.Create<int>() });
+            _testFixture.Publisher.Publish(new TestEvent2 { Id = _testFixture.Fixture.Create<int>() });
+            _testFixture.Publisher.Publish(new TestEvent2 { Id = _testFixture.Fixture.Create<int>() });
 
      
-            Assert.True(WaitUntilEventsProcessingCompleted(_testFixture.TestEventListener, 5,20));
+            Assert.True(WaitUntilEventsProcessingCompleted(_testFixture.TestEventListener, 6, 20));
         }
 
 
