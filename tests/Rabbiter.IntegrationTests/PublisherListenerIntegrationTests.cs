@@ -73,32 +73,5 @@
             }
         }
 
-      /*  private async Task<bool> WaitUntilEventsProcessingCompletedAsync(
-            TestEventListener listener, int expectedEventCount, int timeoutInSeconds = 10)
-        {
-            CancellationTokenSource source = new CancellationTokenSource();
-            CancellationToken token = source.Token;
-
-            var task = Task.Run(async () =>
-            {
-                while (!token.IsCancellationRequested && listener.ProcessedEventCount < expectedEventCount)
-                {
-                    await Task.Delay(1000);
-                }
-            }, token);
-
-
-            if (await Task.WhenAny(task, Task.Delay(timeoutInSeconds)) == task)
-            {
-                return true;
-            }
-            else
-            {
-                source.Cancel();
-                return false;
-            }
-
-        }*/
-
     }
 }
