@@ -18,13 +18,13 @@ jobs:
         working-directory: ./tests/Rabbiter.IntegrationTests
         run: ./init.sh
         
-      - name: Print docker status
+      - name: Status
         if: always()
         run: |
           docker ps
           docker stats --no-stream --all
           
-      - name: Upload integration test results
+      - name: Integration Tests Results
         uses: actions/upload-artifact@v1
         if: always()
         with:

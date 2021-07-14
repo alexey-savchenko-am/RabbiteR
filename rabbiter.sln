@@ -18,7 +18,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "!workflows", "!workflows", "{7987E2AD-3171-4577-BD51-443E93D96A73}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\integration-tests.yml = .github\workflows\integration-tests.yml
+		.github\workflows\unit-tests.yml = .github\workflows\unit-tests.yml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rabbiter.UnitTests", "tests\Rabbiter.UnitTests\Rabbiter.UnitTests.csproj", "{34DA74BC-21FC-4041-B125-5E4F187960CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +41,10 @@ Global
 		{F5B71A2E-169A-47B1-A93B-0B26FA74E96F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5B71A2E-169A-47B1-A93B-0B26FA74E96F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5B71A2E-169A-47B1-A93B-0B26FA74E96F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34DA74BC-21FC-4041-B125-5E4F187960CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34DA74BC-21FC-4041-B125-5E4F187960CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34DA74BC-21FC-4041-B125-5E4F187960CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34DA74BC-21FC-4041-B125-5E4F187960CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +54,7 @@ Global
 		{A778971F-4F23-4A9F-9738-DB6EF7608FFA} = {243A9142-F427-4854-BD16-21A7357CE413}
 		{243A9142-F427-4854-BD16-21A7357CE413} = {D124E496-F624-4D3E-BC55-7232D154759E}
 		{F5B71A2E-169A-47B1-A93B-0B26FA74E96F} = {2B02F39F-FB2F-4665-8D26-171E4AC52C82}
+		{34DA74BC-21FC-4041-B125-5E4F187960CE} = {2B02F39F-FB2F-4665-8D26-171E4AC52C82}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {90F81A05-1105-4978-A8F4-2ABBC06EF822}
