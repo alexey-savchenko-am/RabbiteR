@@ -140,6 +140,18 @@ _eventPublisher.Publish(new OrderAcceptedEvent { Products = products }
 
 ## Resolve Faults
 
+If exception occurred within event handler, Rabbiter tries to redirect it to special fault exchange. 
+You can create it and handle the fault inside special event handler as shown below:
+
+```csharp
+services.RegisterEventListener(
+    eventGroupId: "Shop",
+    options =>
+        options
+            .OnFault<OrderRequestedEvent, ShopFaultOrderRequestedEventHandler>()
+);
+```
+
 ## Integration Tests
 
 Follow this steps to run integration tests:
