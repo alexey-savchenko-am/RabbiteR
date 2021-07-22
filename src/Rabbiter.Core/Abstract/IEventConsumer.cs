@@ -1,5 +1,6 @@
 ﻿namespace Rabbiter.Core.Abstractions
 {
+    using Rabbiter.Core.Abstract.Events;
     using Rabbiter.Core.Abstractions.Events;
     using System;
     using System.Collections.Generic;
@@ -19,6 +20,7 @@
             string listenerId,
             string eventGroupId,
             IDictionary<string, Type> handledEventDictionary,
-            EventHandlerDelegate eventHandler);
+            EventHandlerDelegate eventHandler,
+            EventListenerReconnectDelegate onReconnect);
     }
 }
