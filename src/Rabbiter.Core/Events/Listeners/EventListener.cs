@@ -6,7 +6,6 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Rabbiter.Core.Abstractions;
-    using Rabbiter.Core.Abstractions.EventProcessors;
     using Rabbiter.Core.Abstractions.Events;
 
     public class EventListener
@@ -22,6 +21,8 @@
             => _consumerSubscription != null;
 
         public string EventGroup { get => _processors.EventGroup; }
+
+        public string CurrentListenerId { get; private set; }
 
         public EventListener(
             ILogger<EventListener> logger,
@@ -44,16 +45,20 @@
 
             try
             {
+                CurrentListenerId = listenerId;
+
                 _consumerSubscription = await _consumer.SubscribeAsync(
                     listenerId,
                     _processors.EventGroup,
                     _processors.ToHandledEventDictionary(),
-                    ProcessIncomingEventAsync
+                    ProcessIncomingEventAsync,
+                    ReconnectAsync
                 );
+
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError($"Exception occured while subscription to event consumer for listener {listenerId}: {ex.Message}");
 
                 if (_consumerSubscription != null)
                 {
@@ -61,12 +66,37 @@
                     _consumerSubscription = null;
                 }
 
-
                 return false;
             }
 
             return true;
         }
+
+        private async Task<bool> ReconnectAsync(string listenerId = "")
+        {
+            if (IsStarted) 
+            {
+                _logger.LogInformation($"Trying to stop listener {CurrentListenerId}");
+                StopListening();
+            } 
+
+            var lid = string.IsNullOrEmpty(listenerId)
+                ? string.IsNullOrEmpty(CurrentListenerId)
+                    ? throw new ArgumentNullException("Can't reconnect, unknown listener id")
+                    : CurrentListenerId
+                : listenerId;
+
+            _logger.LogInformation($"About to RESTART listener id {lid} ...");
+
+            var res = await Task.Run(() => StartListeningAsync(lid));
+
+            if (res) _logger.LogInformation($"Listener {lid} has been successfully RESTARTED");
+                else _logger.LogError($"FAILED TO RESTART listener {lid}");
+
+            return res;
+        }
+
+  
 
         private async Task ProcessIncomingEventAsync(IEventContainer<IEvent> @event)
         {

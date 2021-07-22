@@ -19,6 +19,7 @@
 
         public event EventHandler<ConsumerEventArgs> ConsumerCancelled;
         public event EventHandler<IEventContainer<IEvent>> MessageProcessed;
+        public string QueueName => _queueName;
 
         private readonly string _queueName;
         private readonly ILogger<RmqMessageConsumer> _logger;
@@ -37,10 +38,23 @@
             _messageHandler = messageHandler;
         }
 
-
+        //
+        // Summary:
+        //     Called when the consumer is cancelled for reasons other than by a basicCancel:
+        //     e.g. the queue has been deleted (either by this channel or by any other channel).
+        //     See RabbitMQ.Client.IBasicConsumer.HandleBasicCancelOk(System.String) for notification
+        //     of consumer cancellation due to basicCancel
+        //
+        // Parameters:
+        //   consumerTag:
+        //     Consumer tag this consumer is registered.
         public void HandleBasicCancel(string consumerTag)
         {
-            _logger.LogInformation($"consumer {consumerTag} stopped");
+            _logger.LogError(
+                $"Channel for queue {_queueName} has been closed. " +
+                $"Perhaps queue has been corrupted or removed."
+            );
+            ConsumerCancelled.Invoke(this, new ConsumerEventArgs(new string[] { consumerTag }));
         }
 
         public void HandleBasicCancelOk(string consumerTag)
@@ -123,20 +137,30 @@
         }
 
 
-
+        //
+        // Summary:
+        //     Called when the model shuts down.
+        //
+        // Parameters:
+        //   model:
+        //     Common AMQP model.
+        //
+        //   reason:
+        //     Information about the reason why a particular model, session, or connection was
+        //     destroyed.
         public void HandleModelShutdown(object model, ShutdownEventArgs reason)
         {
-            
-            _logger.LogInformation($"Channel has been closed. {reason}");
+            _logger.LogError($"Channel for queue {_queueName} has been closed. {reason}.");
+            ConsumerCancelled.Invoke(this, new ConsumerEventArgs(new string[] { }));
         }
 
 
         public void Dispose()
         {
+            
             if (!Model.IsClosed)
             {
                 Model.Abort();
-                Model.Close();
                 Model.Dispose();
             }
         }

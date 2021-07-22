@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
 
     public abstract class BaseBuilder<TIn, TOut, TBuilder>
+        : IDisposable
         where TBuilder : BaseBuilder<TIn, TOut, TBuilder>, new()
     {
 
@@ -20,11 +21,10 @@
             where TPipelineStep : IPipelineStep<TIn, TOut>
         {
             _builderInstance = new TBuilder();
+            _builderInstance._scope = serviceScopeFactory.CreateScope();
 
             StepHandler<TIn, TOut> handler = async (TIn data, Func<TIn, Task<TOut>> next) =>
             {
-                _builderInstance._scope = serviceScopeFactory.CreateScope();
-
                 var step = _builderInstance._scope.ServiceProvider.GetRequiredService<TPipelineStep>();
                 return await step.InvokeAsync(data, next);
             };
@@ -54,9 +54,6 @@
             _finalStep = async (TIn data, Func<TIn, Task<TOut>> next) =>
             {
                 var step = _builderInstance._scope.ServiceProvider.GetRequiredService<TPipelineStep>();
-/*
-                if (_builderInstance._scope != null)
-                    _builderInstance._scope.Dispose();*/
 
                 return await step.InvokeAsync(data, null);
             };
@@ -84,6 +81,10 @@
                     .ConfigureAwait(false);
         }
 
-
+        public void Dispose()
+        {
+            if(_scope != null)
+                _scope.Dispose();
+        }
     }
 }

@@ -1,32 +1,30 @@
 ﻿namespace Rabbiter.Core
 {
     using RabbitMQ.Client;
-    using Rabbiter.Core.Abstractions;
 
-    public class RmqResourceFactory
-        : IRmqExchangeFactory, IRmqQueueFactory
+    public static class ChannelExtensions
     {
-        public void DeclareExchange(
-            IModel channel, 
-            string exchangeName, 
+        public static void DeclareExchange(
+            this IModel channel,
+            string exchangeName,
             string exchangeType = ExchangeType.Fanout,
             string bindToExchange = null)
         {
             channel.ExchangeDeclare(
-                exchange: exchangeName, 
-                durable: true, 
+                exchange: exchangeName,
+                durable: true,
                 type: exchangeType
             );
 
-            if(bindToExchange != null)
+            if (bindToExchange != null)
             {
                 channel.ExchangeBind(bindToExchange, exchangeName, "");
             }
-            
+
         }
 
 
-        public string DeclareQueue(IModel channel, string exchangeName, string queueName, string routingKey = "")
+        public static string DeclareQueue(this IModel channel, string exchangeName, string queueName, string routingKey = "")
         {
             var queue = channel.QueueDeclare(
                 queue: queueName,
@@ -34,10 +32,12 @@
                 exclusive: false,
                 autoDelete: false
             );
-            
+
             channel.QueueBind(queueName, exchangeName, routingKey: routingKey);
 
             return queue.QueueName;
         }
     }
+
+
 }

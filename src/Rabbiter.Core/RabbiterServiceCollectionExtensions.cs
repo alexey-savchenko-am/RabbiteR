@@ -35,8 +35,6 @@
         {
 
             serviceCollection.TryAddSingleton<IRmqResourceManager, RmqResourceManager>();
-            serviceCollection.TryAddSingleton<IRmqExchangeFactory, RmqResourceFactory>();
-            serviceCollection.TryAddSingleton<IRmqQueueFactory, RmqResourceFactory>();
             serviceCollection.TryAddSingleton<IEventNameResolvingStrategy, EventNameResolver>();
             serviceCollection.TryAddSingleton<MessageConfirmationDispatcher>();
             serviceCollection.RegisterPayloadTransformator(payloadFormat);
@@ -48,7 +46,7 @@
             serviceCollection.TryAddSingleton<IEventConsumer>(provider =>
             {
                 var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-
+                
                  return new EventConsumer(
                     loggerFactory,
                     provider.ConnectToBus(loggerFactory, configuration),

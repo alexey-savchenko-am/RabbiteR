@@ -6,32 +6,29 @@
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Rabbiter.Core;
+    using Rabbiter.Core.Abstract.Events;
     using Rabbiter.Core.Abstractions;
     using Rabbiter.Core.Abstractions.Events;
-    using Rabbiter.Core.Abstractions.Handlers;
-    using Rabbiter.Core.Abstractions.Messaging;
-    using Rabbiter.Core.Messaging;
     using Rabbiter.Core.Messaging.Consumers;
     using RabbitMQ.Client;
 
     public class EventConsumer
         : IEventConsumer, IDisposable
     {
-        private readonly IConnection _connection;
+        private IConnection _connection;
         private readonly IRmqResourceManager _rmqResourceManager;
         private readonly IHandler _messageHandlerFactory;
         private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger<EventConsumer> _logger;
 
-        private readonly Dictionary<string, RmqMessageConsumer> _consumers
-            = new Dictionary<string, RmqMessageConsumer>();
+        private readonly Dictionary<string, ConsumerSubscription> _consumers
+            = new Dictionary<string, ConsumerSubscription>();
 
         public EventConsumer(
             ILoggerFactory loggerFactory,
             IConnection connection,
             IRmqResourceManager rmqResourceManager,
-            IHandler messageHandlerFactory
-           )
+            IHandler messageHandlerFactory)
         {
             _loggerFactory = loggerFactory;
             _logger = loggerFactory.CreateLogger<EventConsumer>();
@@ -45,7 +42,8 @@
             string listenerId,
             string eventGroupId,
             IDictionary<string, Type> handledEventDictionary,
-            EventHandlerDelegate eventHandler)
+            EventHandlerDelegate eventHandler,
+            EventListenerReconnectDelegate onReconnect)
         {
             // open channel 
             var channel = _rmqResourceManager.OpenChannel(
@@ -61,9 +59,9 @@
                 messageHandler:
                     await _messageHandlerFactory.GetMessageHandlerAsync(channel, handledEventDictionary));
 
-            rmqConsumer.MessageProcessed += (s, e) => eventHandler(e);
 
-            _consumers.Add(listenerId, rmqConsumer);
+            rmqConsumer.MessageProcessed += (s, e) => eventHandler(e);
+            rmqConsumer.ConsumerCancelled += (s, e) => onReconnect();
 
             channel.BasicConsume(
              queue: eventGroupId,
@@ -75,23 +73,37 @@
              consumer: rmqConsumer
             );
 
-            return new ConsumerSubscription(listenerId, () =>
-            {
-                rmqConsumer.MessageProcessed -= (s, e) => eventHandler(e);
-                // this command will also close channel 
-                rmqConsumer.Dispose();
-                _consumers.Remove(listenerId);
-            });
+            var subscription = new ConsumerSubscription(
+                listenerId,
+                rmqConsumer,
+                () =>
+                {
+                    rmqConsumer.MessageProcessed -= (s, e) => eventHandler(e);
+                    rmqConsumer.ConsumerCancelled -= (s, e) => onReconnect();
+                  
+                    // this command will also close channel 
+                    rmqConsumer.Dispose();
+                    _consumers.Remove(listenerId);
+                });
 
+            _consumers.Add(listenerId, subscription);
+
+            return subscription;
         }
-
 
         public void Dispose()
         {
-            foreach(var consumer in _consumers)
-            { 
-                consumer.Value.Dispose();
+            foreach (var consumer in _consumers)
+            {
+                consumer.Value.Unsubscribe();
                 _consumers.Remove(consumer.Key);
+            }
+
+            if (_connection != null && _connection.IsOpen)
+            {
+                _connection.Close();
+                _connection.Dispose();
+                _connection = null;
             }
         }
     }
