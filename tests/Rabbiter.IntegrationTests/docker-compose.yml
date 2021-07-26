@@ -26,9 +26,6 @@ services:
     working_dir: /src
     command: 
         [
-            "/test/wait-for-it.sh",
-            "rabbitmq:5672",
-            "--",
             "dotnet",
             "test",
             "/test/Rabbiter.IntegrationTests.csproj",

@@ -3,11 +3,11 @@
     using AutoFixture;
     using Rabbiter.IntegrationTests.Common;
     using Rabbiter.IntegrationTests.Events;
-    using System;
-    using System.Threading;
     using System.Threading.Tasks;
     using Xunit;
 
+
+    [Collection("SequentialIntegrationTests")]
     public class PublisherListenerIntegrationTests
         : IClassFixture<IntegrationTestFixture>
     {
@@ -20,26 +20,25 @@
         [Fact]
         public async Task PublishOneMessageToBrokerAndSuccessfullyReceiveAndProcessOne()
         {
-            var listener = _testFixture.TestEventListener;
-            listener.Clear();
-
+            var handler = _testFixture.TestEventHandler;
+            handler.Clear();
 
             var eventId = _testFixture.Fixture.Create<int>();
 
             _testFixture.Publisher.Publish(new TestEvent { Id = eventId });
 
-            await WaitForEventProcessingCompletionAsync(listener, 1);
+            await handler.WaitCompleted(1);
 
-            Assert.Equal(1, listener.ProcessedEventCount);
+            Assert.Equal(1, handler.ProcessedEventCount);
         }
 
         [Fact]
         public async Task PublishMultipleMessagesToBrokerAndSuccessfullyReceiveAndProcessThem()
         {
 
-            var listener = _testFixture.TestEventListener;
+            var handler = _testFixture.TestEventHandler;
 
-            listener.Clear();
+            handler.Clear();
 
             _testFixture.Publisher.Publish(new TestEvent { Id = _testFixture.Fixture.Create<int>() });
             _testFixture.Publisher.Publish(new TestEvent { Id = _testFixture.Fixture.Create<int>() });
@@ -49,29 +48,17 @@
             _testFixture.Publisher.Publish(new TestEvent2 { Id = _testFixture.Fixture.Create<int>() });
             _testFixture.Publisher.Publish(new TestEvent2 { Id = _testFixture.Fixture.Create<int>() });
 
-            await WaitForEventProcessingCompletionAsync(listener, 6, 20);
+            await handler.WaitCompleted(6, 20);
 
-            var statEvent1 = listener.EventStatistics(typeof(TestEvent));
-            var statEvent2 = listener.EventStatistics(typeof(TestEvent2));
+            var statEvent1 = handler.EventStatistics(typeof(TestEvent));
+            var statEvent2 = handler.EventStatistics(typeof(TestEvent2));
 
-            Assert.Equal(6, listener.ProcessedEventCount);
+            Assert.Equal(6, handler.ProcessedEventCount);
             Assert.NotNull(statEvent1);
             Assert.NotNull(statEvent2);
             Assert.Equal(3, statEvent1.ReceivedMessageCount);
             Assert.Equal(3, statEvent2.ReceivedMessageCount);
 
         }
-
-
-        private async Task WaitForEventProcessingCompletionAsync(
-            TestEventListener listener, int expectedEventCount, int timeoutInSeconds = 10)
-        {
-            while (listener.ProcessedEventCount < expectedEventCount && timeoutInSeconds > 0)
-            {
-                await Task.Delay(1000);
-                timeoutInSeconds--;
-            }
-        }
-
     }
 }

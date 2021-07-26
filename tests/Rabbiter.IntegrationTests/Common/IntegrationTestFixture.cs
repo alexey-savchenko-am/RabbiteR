@@ -21,7 +21,7 @@
         public Config TestConfiguration { get; private set; }
 
         public IEventPublisher Publisher { get; private set; }
-        public TestEventListener TestEventListener { get; private set; }
+        public TestEventHandler TestEventHandler { get; private set; }
 
         public Fixture Fixture { get; private set; }
 
@@ -30,7 +30,7 @@
             InitializeAsync().GetAwaiter().GetResult();
         }
 
-        protected async Task InitializeAsync()
+        public async Task InitializeAsync()
         {
             Fixture = new Fixture();
 
@@ -48,7 +48,7 @@
             }
 
             Publisher = _host.Services.GetRequiredService<IEventPublisher>();
-            TestEventListener = _host.Services.GetRequiredService<TestEventListener>();
+            TestEventHandler = _host.Services.GetRequiredService<TestEventHandler>();
             
         }
 
@@ -58,7 +58,7 @@
                  .ConfigureServices((hostContext, services) =>
                  {
 
-                     services.AddSingleton<TestEventListener>();
+                     services.AddSingleton<TestEventHandler>();
 
                      services.RegisterRmqTransport(
                          () =>
@@ -71,8 +71,8 @@
                         eventGroupId: "Test", // queue name
                         options =>
                             options
-                                .SubscribeOn<TestEvent, TestEventListener>()
-                                .SubscribeOn<TestEvent2, TestEventListener>()
+                                .SubscribeOn<TestEvent, TestEventHandler>()
+                                .SubscribeOn<TestEvent2, TestEventHandler>()
                     );
 
 
@@ -88,11 +88,20 @@
         {
             if (_host == null)
                 return;
-
             _host.StopAsync().Wait();
             _host.Dispose();
             _host = null;
+            RemoveTestQueue();
+        }
 
+        private void RemoveTestQueue()
+        {
+            var factory = new ConnectionFactory() { Uri = new Uri(TestConfiguration.RabbitMqConnectionString) };
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                channel.QueueDelete("Test");
+            }
         }
 
         public void Dispose()
