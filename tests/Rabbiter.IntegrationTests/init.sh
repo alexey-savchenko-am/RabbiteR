@@ -10,6 +10,8 @@ dotnet restore
 
 docker-compose up -d rabbitmq
 
+./wait-for-it.sh localhost:5672 --
+
 docker-compose run --rm rabbitertests
 
 docker ps

@@ -33,10 +33,12 @@
                 autoDelete: false
             );
 
+            
             channel.QueueBind(queueName, exchangeName, routingKey: routingKey);
 
             return queue.QueueName;
         }
+
     }
 
 
