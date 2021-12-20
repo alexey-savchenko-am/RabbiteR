@@ -163,6 +163,7 @@ PS> ./init.sh
 ```
 Test results will be written to rabbiter\tests\Rabbiter.IntegrationTests\TestResults directory.
 
+
 ## License
 
 Apache License 2.0
