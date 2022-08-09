@@ -30,7 +30,6 @@
             return ToEvent(input.Message, input.HandledEventDictionary);
         }
 
-
         private IEventContainer<IEvent> ToEvent(IMessage message, IDictionary<string, Type> handledEventDictionary)
         {
 
@@ -47,19 +46,15 @@
             }
 
             var @event = _payloadTransformStrategy.ToEvent(message.Payload, eventType);
-
-            var containedEvent = (IEventContainer<IEvent>)Activator.CreateInstance(
-                typeof(EventContainer<>).MakeGenericType(eventType),
-                id,
-                eventGroup,
-                message,
-                eventType,
-                eventError,
-                @event);
-
+            
+            var containedEvent 
+                = typeof(EventContainer<>)
+                    .MakeGenericType(eventType)
+                    .GetInstance(id, eventGroup, message, eventType, eventError, @event);
+            
             _logger.LogInformation($"{@event} event constructed and ready to be processed");
 
-            return containedEvent;
+            return (IEventContainer<IEvent>)containedEvent;
         }
 
 
